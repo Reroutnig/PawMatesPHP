@@ -1,41 +1,29 @@
 <?php
-
+// Include the configuration file that contains database connection settings
 include 'config.php';
 
+// Check if the registration form is submitted
 if(isset($_POST['submit'])){
-
+   
+   //retrieves user input for name, email, and passwords
    $name = mysqli_real_escape_string($conn, $_POST['name']);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
+   $pass = mysqli_real_escape_string($conn, md5($_POST['password'])); 
    $cpass = mysqli_real_escape_string($conn, md5($_POST['cpassword']));
-   $image = $_FILES['image']['name'];
-   $image_size = $_FILES['image']['size'];
-   $image_tmp_name = $_FILES['image']['tmp_name'];
-   $image_folder = 'uploaded_img/'.$image;
-
+   
+   // Query the database to check if a user with the provided email and password already exists
    $select = mysqli_query($conn, "SELECT * FROM `user_form` WHERE email = '$email' AND password = '$pass'") or die('query failed');
-
+   // If a user with the same email and password combination is found, set an error message
    if(mysqli_num_rows($select) > 0){
-      $message[] = 'user already exist'; 
-   }else{
+      $message[] = 'user already exists'; 
+   } else {
+      // If the passwords do not match, set an error message
       if($pass != $cpass){
          $message[] = 'confirm password not matched!';
-      }elseif($image_size > 2000000){
-         $message[] = 'image size is too large!';
-      }else{
-         $insert = mysqli_query($conn, "INSERT INTO `user_form`(name, email, password, image) VALUES('$name', '$email', '$pass', '$image')") or die('query failed');
-
-         if($insert){
-            move_uploaded_file($image_tmp_name, $image_folder);
-            $message[] = 'registered successfully!';
-            header('location:login.php');
-         }else{
-            $message[] = 'registeration failed!';
-         }
+      }
+     
       }
    }
-
-}
 
 ?>
 
@@ -47,33 +35,39 @@ if(isset($_POST['submit'])){
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>register</title>
 
-   <!-- custom css file link  -->
+   <!-- Link CSS files  -->
    <link rel="stylesheet" href="css/style.css">
-
+   <link rel="stylesheet" href="css/signup.css">
 </head>
 <body>
-   
-<div class="form-container">
+   <h1>PawMates</h1>
 
-   <form action="" method="post" enctype="multipart/form-data">
-      <h3>register now</h3>
-      <?php
-      if(isset($message)){
-         foreach($message as $message){
-            echo '<div class="message">'.$message.'</div>';
+   <!-- Registration form container -->
+   <div class="form-container">
+      <form action="" method="post" enctype="multipart/form-data">
+         <h3>Sign-up!</h3>
+         
+         <!-- Display error messages if there are any -->
+         <?php
+         if(isset($message)){
+            foreach($message as $message){
+               echo '<div class="message">'.$message.'</div>';
+            }
          }
-      }
-      ?>
-      <input type="text" name="name" placeholder="enter username" class="box" required>
-      <input type="email" name="email" placeholder="enter email" class="box" required>
-      <input type="password" name="password" placeholder="enter password" class="box" required>
-      <input type="password" name="cpassword" placeholder="confirm password" class="box" required>
-      <input type="file" name="image" class="box" accept="image/jpg, image/jpeg, image/png">
-      <input type="submit" name="submit" value="register now" class="btn">
-      <p>already have an account? <a href="login.php">login now</a></p>
-   </form>
-
-</div>
-
+         ?>
+         
+         <!-- Input fields for name, email, and passwords -->
+         <input type="text" name="name" placeholder="enter username" class="box" required>
+         <input type="email" name="email" placeholder="enter email" class="box" required>
+         <input type="password" name="password" placeholder="enter password" class="box" required>
+         <input type="password" name="cpassword" placeholder="confirm password" class="box" required>
+        
+         <!-- Submit button to register -->
+         <input type="submit" name="submit" value="register now" class="btn">
+         
+         <!-- Link for users to login if they already have an account -->
+         <p>already have an account? <a href="login.php">Login Here</a></p>
+      </form>
+   </div>
 </body>
 </html>
