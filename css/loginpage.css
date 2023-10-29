@@ -1,0 +1,29 @@
+body 
+{
+  background-image: url("../images/background.png");
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+}
+
+form {
+    width: 15rem;
+    margin: auto;
+    color: #000;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.5); /* White color with 50% transparency */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+button {
+  color: #000;
+  background-color: #fff;
+}
+
+a {
+  color: #cf4d8f;
+}
